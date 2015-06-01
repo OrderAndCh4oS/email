@@ -1,0 +1,21 @@
+{
+    "name": "sarcoma/email",
+    "description": "A html email builder for contact forms, using phpmailer.",
+    "keywords": ["email", "html email builder"],
+    "suggest": {
+        "phpmailer/phpmailer": "^5.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sean Cooper",
+            "email": "sean@threeandme.co.uk",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+      "psr-4": {
+        "Sarcoma\\" : "src/"
+      }
+    }
+}
