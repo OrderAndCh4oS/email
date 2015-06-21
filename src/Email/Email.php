@@ -47,7 +47,7 @@
          * @param string $size
          * @param string $font
          */
-        public function setPStyle($color = "#000", $size = "12px", $font = "Helvetica,Arial,sans-serif")
+        public function setPStyle($color = "#000", $size = "11px", $font = "Helvetica,Arial,sans-serif")
         {
             $this->p_style = "color:$color;font-size:$size;font-family:$font;font-weight:normal;";
         }
