@@ -52,45 +52,6 @@
             $this->p_style = "color:$color;font-size:$size;font-family:$font;font-weight:normal;";
         }
 
-        /**
-         * @param string $subject
-         */
-        public function setSubject($subject)
-        {
-            $this->subject = $subject;
-        }
-
-        /**
-         * @param array $array
-         *
-         * @return array $errors
-         */
-        public function check_required_fields($array)
-        {
-            $errors = array();
-            foreach ($array as $key => $field_name) {
-                // check that required fields are set
-                if (!isset($field_name) || (empty($field_name) && $field_name != '0')) {
-                    $errors[] = $key . " is empty.";
-                }
-            }
-
-            return $errors;
-        }
-
-        protected function clean($data)
-        {
-            return htmlentities(trim($data));
-        }
-
-        /**
-         * @return string
-         */
-        public function getEmailTitle()
-        {
-            return $this->email_title;
-        }
-
         public function setText($array)
         {
             foreach ($array as $key => $form_field) {
@@ -116,18 +77,48 @@
             }
         }
 
-        public function buildMessage()
+        /**
+         * @return string
+         */
+        public function getEmailTitle()
         {
-            $body = "<html><head><title>{$this->email_title}</title></head>";
-            $body .= "<body><table><tbody><tr><td>";
-            $body .= "<h1 style=\"{$this->h1_style}\">$this->email_title</h1>";
+            return $this->email_title;
+        }
+
+        public function getMessage()
+        {
+            $message = "<html><head><title>{$this->email_title}</title></head>";
+            $message .= "<body><table><tbody><tr><td>";
+            $message .= "<h1 style=\"{$this->h1_style}\">$this->email_title</h1>";
             foreach ($this->message as $title => $text) {
                 $text = stripslashes($text);
-                $body .= "<h2 style=\"{$this->h2_style}\">{$title}:</h2>";
-                $body .= "<p style=\"{$this->p_style}\"><strong>{$text}</strong></p>";
+                $message .= "<h2 style=\"{$this->h2_style}\">{$title}:</h2>";
+                $message .= "<p style=\"{$this->p_style}\"><strong>{$text}</strong></p>";
             }
-            $body .= "</td></tr></tbody></table></body>";
-
-            return $body;
+            $message .= "</td></tr></tbody></table></body>";
+            return $message;
         }
+
+        /**
+         * @param array $array
+         * @return array $errors
+         */
+        public function check_required_fields($array)
+        {
+            $errors = array();
+            foreach ($array as $key => $field_name) {
+                // check that required fields are set
+                if (!isset($field_name) || (empty($field_name) && $field_name != '0')) {
+                    $errors[] = $key . " is empty.";
+                }
+            }
+
+            return $errors;
+        }
+
+        protected function clean($data)
+        {
+            return htmlentities(trim($data));
+        }
+
     }
