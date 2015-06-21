@@ -43,11 +43,19 @@
         }
 
         /**
-         * @param string $subject
+         * @return string
          */
-        public function setSubject( $subject )
+        public function getEmailTitle()
         {
-            $this->subject = $subject;
+            return $this->email_title;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getMessage()
+        {
+            return $this->message;
         }
 
         /**
@@ -71,22 +79,6 @@
         private function clean( $data )
         {
             return htmlentities( trim( $data ) );
-        }
-
-        /**
-         * @return string
-         */
-        public function getEmailTitle()
-        {
-            return $this->email_title;
-        }
-
-        /**
-         * @return mixed
-         */
-        public function getMessage()
-        {
-            return $this->message;
         }
 
         public function setText( $array )

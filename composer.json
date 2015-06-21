@@ -13,7 +13,8 @@
             "role": "Developer"
         }
     ],
-    "autoload": {
+  "require": {},
+  "autoload": {
       "psr-4": {
         "Sarcoma\\" : "src/"
       }
