@@ -54,27 +54,34 @@
 
         public function setText($array)
         {
-            foreach ($array as $key => $form_field) {
-                if (!empty($form_field)) {
-                    $this->message[$key] = $this->clean($form_field);
+            foreach ($array as $title => $text) {
+                if (!empty($text)) {
+                    $text            = stripslashes($text);
+                    $this->message[] = $this->title($title).$this->paragraph($text);
                 } else {
-                    $this->message[$key] = "Not Provided";
+                    $this->message[] = $this->title($title).$this->paragraph('Not Provided');
                 }
             }
         }
 
         public function setTextArea($array)
         {
-            foreach ($array as $key => $form_field) {
-                if (!empty($form_field)) {
-                    $text_area           = nl2br(wordwrap($form_field, 60));
-                    $text_area           = $this->clean($text_area);
-                    $text_area           = preg_replace('#&lt;((?:br) /?)&gt;#', '<\1>', $text_area);
-                    $this->message[$key] = $text_area;
+            foreach ($array as $title => $text_area) {
+                if (!empty($text_area)) {
+                    $output          = nl2br(wordwrap($text_area, 60));
+                    $output          = $this->clean($output);
+                    $output          = preg_replace('#&lt;((?:br) /?)&gt;#', '<\1>', $output);
+                    $this->message[] = $this->title($title).$this->paragraph($output);
                 } else {
-                    $this->message[$key] = "Not Provided";
+                    $this->message[] = $this->title($title).$this->paragraph('Not Provided');
                 }
             }
+        }
+
+        public function setLink($link_text, $url)
+        {
+            $cleanUrl        = $this->clean($url);
+            $this->message[] = $this->paragraph('<a href="'.$cleanUrl.'">'.$link_text.'</a>');
         }
 
         /**
@@ -90,17 +97,17 @@
             $message = "<html><head><title>{$this->email_title}</title></head>";
             $message .= "<body><table><tbody><tr><td>";
             $message .= "<h1 style=\"{$this->h1_style}\">$this->email_title</h1>";
-            foreach ($this->message as $title => $text) {
-                $text = stripslashes($text);
-                $message .= "<h2 style=\"{$this->h2_style}\">{$title}:</h2>";
-                $message .= "<p style=\"{$this->p_style}\"><strong>{$text}</strong></p>";
+            foreach ($this->message as $output) {
+                $message .= $output;
             }
-            $message .= "</td></tr></tbody></table></body>";
+            $message .= "</td></tr></tbody></table></body></html>";
+
             return $message;
         }
 
         /**
          * @param array $array
+         *
          * @return array $errors
          */
         public function check_required_fields($array)
@@ -109,7 +116,7 @@
             foreach ($array as $key => $field_name) {
                 // check that required fields are set
                 if (!isset($field_name) || (empty($field_name) && $field_name != '0')) {
-                    $errors[] = $key . " is empty.";
+                    $errors[] = $key." is empty.";
                 }
             }
 
@@ -121,4 +128,13 @@
             return htmlentities(trim($data));
         }
 
+        protected function title($title)
+        {
+            return "<h2 style=\"{$this->h2_style}\">{$title}:</h2>";
+        }
+
+        protected function paragraph($content)
+        {
+            return "<p style=\"{$this->p_style}\">{$content}</p>";
+        }
     }
