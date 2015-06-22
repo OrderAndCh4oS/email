@@ -56,7 +56,7 @@
         {
             foreach ($array as $title => $text) {
                 if (!empty($text)) {
-                    $text            = stripslashes($text);
+                    $text            = stripslashes($this->clean($text));
                     $this->message[] = $this->title($title).$this->paragraph($text);
                 } else {
                     $this->message[] = $this->title($title).$this->paragraph('Not Provided');
@@ -69,7 +69,7 @@
             foreach ($array as $title => $text_area) {
                 if (!empty($text_area)) {
                     $output          = nl2br(wordwrap($text_area, 60));
-                    $output          = $this->clean($output);
+                    $output          = stripslashes($this->clean($output));
                     $output          = preg_replace('#&lt;((?:br) /?)&gt;#', '<\1>', $output);
                     $this->message[] = $this->title($title).$this->paragraph($output);
                 } else {
@@ -78,10 +78,11 @@
             }
         }
 
-        public function setLink($link_text, $url)
+        public function setLink($array)
         {
-            $cleanUrl        = $this->clean($url);
-            $this->message[] = $this->paragraph('<a href="'.$cleanUrl.'">'.$link_text.'</a>');
+            foreach ($array as $link_text => $url) {;
+                $this->message[] = $this->paragraph('<a href="'.$this->clean($url).'">'.$this->clean($link_text).'</a>');
+            }
         }
 
         /**
