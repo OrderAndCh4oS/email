@@ -32,45 +32,37 @@
             );
         }
 
-        /**
-         * @param string $email_title
-         */
-        public function setEmailTitle($email_title)
+        public function setTag($text, $tag, $styles = array())
         {
-            $this->email_title = $email_title;
-        }
-
-        public function setText($array, $styles = array())
-        {
-            foreach ($array as $title => $text) {
-                if (!empty($text)) {
-                    $text            = stripslashes($this->clean($text));
-                    $this->message[] = $this->paragraph($text, $styles);
-                } else {
-                    $this->message[] = $this->paragraph('Not Provided');
-                }
+            if (!empty($text)) {
+                $text            = stripslashes($this->clean($text));
+                $this->message[] = $this->makeTag($text, $tag, $styles);
+            } else {
+                $this->message[] = $this->makeTag('Not Provided', $tag);
             }
         }
 
-        public function setTextArea($array, $styles = array())
+        public function setTextArea($text_area, $tag, $styles = array(), $text_wrap = null)
         {
-            foreach ($array as $title => $text_area) {
-                if (!empty($text_area)) {
-                    $output          = nl2br(wordwrap($text_area, 60));
-                    $output          = stripslashes($this->clean($output));
-                    $output          = preg_replace('#&lt;((?:br) /?)&gt;#', '<\1>', $output);
-                    $this->message[] = $this->paragraph($output, $styles);
-                } else {
-                    $this->message[] = $this->paragraph('Not Provided', $styles);
+            if (!empty($text_area)) {
+                if ($text_area) {
+                    $text_area   = wordwrap($text_area, $text_wrap);
                 }
+                $text_area       = nl2br($text_area);
+                $text_area       = stripslashes($this->clean($text_area));
+                $text_area       = preg_replace('#&lt;((?:br) /?)&gt;#', '<\1>', $text_area);
+                $this->message[] = $this->makeTag($text_area, $styles);
+            } else {
+                $this->message[] = $this->makeTag('Not Provided', $tag, $styles);
             }
         }
 
-        public function setLink($array, $styles = array())
+        public function setLink($array, $tag, $styles = array())
         {
             foreach ($array as $link_text => $url) {
                 ;
-                $this->message[] = $this->paragraph('<a href="' . $this->clean($url) . '">' . $this->clean($link_text) . '</a>', $styles);
+                $this->message[] = $this->makeTag('<a href="'.$this->clean($url).'">'.$this->clean($link_text).'</a>',
+                    $tag, $styles);
             }
         }
 
@@ -103,7 +95,7 @@
             foreach ($array as $key => $field_name) {
                 // check that required fields are set
                 if (!isset($field_name) || (empty($field_name) && $field_name != '0')) {
-                    $errors[] = $key . " is empty.";
+                    $errors[] = $key." is empty.";
                 }
             }
 
@@ -115,14 +107,9 @@
             return htmlentities(trim($data));
         }
 
-        protected function title($title, $level = 'h1', $styles = array())
+        protected function makeTag($title, $tag = 'h1', $styles = array())
         {
-            return "<{$level} style=\"{$this->makeStyles($styles)}\">{$title}:</h2>";
-        }
-
-        protected function paragraph($content, $styles = array())
-        {
-            return "<p style=\"{$this->makeStyles($styles)}\">{$content}</p>";
+            return "<{$tag} style=\"{$this->makeStyles($styles)}\">{$title}:</{$tag}>";
         }
 
         protected function makeStyles($styles = array())
@@ -130,7 +117,7 @@
             $styles = array_merge($this->base_style, $styles);
             $output = '';
             foreach ($styles as $property => $value) {
-                $output .= $property . ':' . $value . ';';
+                $output .= $property.':'.$value.';';
             }
 
             return $output;
@@ -143,15 +130,15 @@
             if ($size > 0) {
                 while ($i <= $scale) {
                     $size = $size * $this->ratio;
-                    $i ++;
+                    $i++;
                 }
             } elseif ($size < 0) {
                 while ($i >= $scale) {
                     $size = $size / $this->ratio;
-                    $i --;
+                    $i--;
                 }
             }
 
-            return $size . "px";
+            return $size."px";
         }
     }
