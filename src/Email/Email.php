@@ -120,7 +120,7 @@
 
         protected function makeStyles($styles = array())
         {
-            $styles = array_merge($this->base_style, $styles);
+            $styles = array_merge($this->styles, $styles);
             $output = '';
             foreach ($styles as $property => $value) {
                 $output .= $property.':'.$value.';';
