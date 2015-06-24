@@ -1,6 +1,6 @@
 {
     "name": "sarcoma/email",
-    "description": "A html email builder for contact forms, using phpmailer.",
+    "description": "A html email builder for contact forms",
     "keywords": ["email", "html email builder"],
     "suggest": {
         "phpmailer/phpmailer": "^5.2"
