@@ -9,8 +9,7 @@
         protected $base_font_size;
         protected $ratio;
         protected $line_height;
-        protected $base_style;
-        protected $style;
+        protected $styles;
 
         protected $email_title;
         protected $message;
@@ -25,11 +24,18 @@
             $this->base_font_size = $base_font_size;
             $this->ratio          = $ratio;
             $this->line_height    = $line_height;
-            $this->base_style     = array(
+            $this->styles = array(
                 'font-family'    => $font_family,
                 'line-height'    => $line_height,
                 'padding-bottom' => 0
             );
+        }
+
+        public function setStyle($styles)
+        {
+            foreach ($styles as $property => $style) {
+                $this->styles[$property] = $style;
+            }
         }
 
         public function setTag($text, $tag, $styles = array())
