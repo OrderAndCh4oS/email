@@ -16,8 +16,8 @@
         protected $message;
 
         protected function __construct(
-            $base_font_size = 12,
             $font_family = 'Helvetica,Arial,sans-serif',
+            $base_font_size = 12,
             $line_height = 1.3,
             $ratio = 1.618
         ) {
