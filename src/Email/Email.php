@@ -17,6 +17,12 @@
         protected $email_title;
         protected $message;
 
+        /**
+         * @param string $font_family
+         * @param int $base_font_size
+         * @param float $line_height
+         * @param float $ratio
+         */
         public function __construct(
             $font_family = 'Helvetica,Arial,sans-serif',
             $base_font_size = 12,
@@ -36,6 +42,9 @@
             );
         }
 
+        /**
+         * @param array $styles
+         */
         public function setStyle($styles)
         {
             foreach ($styles as $property => $style) {
@@ -43,6 +52,11 @@
             }
         }
 
+        /**
+         * @param string $text
+         * @param string $tag
+         * @param array $styles
+         */
         public function setTag($text, $tag, $styles = array())
         {
             if (!empty($text)) {
@@ -53,6 +67,12 @@
             }
         }
 
+        /**
+         * @param string $text_area
+         * @param string $tag
+         * @param array $styles
+         * @param null $text_wrap
+         */
         public function setTextArea($text_area, $tag, $styles = array(), $text_wrap = null)
         {
             if (!empty($text_area)) {
@@ -68,6 +88,12 @@
             }
         }
 
+        /**
+         * @param string $link_text
+         * @param string $url
+         * @param string $tag
+         * @param array $styles
+         */
         public function setLink($link_text, $url, $tag, $styles = array())
         {
             $this->message[] = $this->makeTag('<a href="' . $this->clean($url) . '">' . $this->clean($link_text) . '</a>',
@@ -82,6 +108,10 @@
             return $this->email_title;
         }
 
+        /**
+         * @param string $template
+         * @return string
+         */
         public function getMessage($template = 'email.twig')
         {
             $loader = new Twig_Loader_Filesystem(__DIR__ . '/../../views');
@@ -98,7 +128,6 @@
 
         /**
          * @param array $array
-         *
          * @return array $errors
          */
         public function check_required_fields($array)
@@ -114,16 +143,32 @@
             return $errors;
         }
 
+        /**
+         * @param $data
+         * @return string
+         */
         protected function clean($data)
         {
             return htmlentities(trim($data));
         }
 
+        /**
+         * @param $title
+         * @param string $tag
+         * @param array $styles
+         *
+         * @return string
+         */
         protected function makeTag($title, $tag = 'p', $styles = array())
         {
             return "<{$tag} style=\"{$this->makeStyles($styles)}\">{$title}</{$tag}>";
         }
 
+        /**
+         * @param array $styles
+         *
+         * @return string
+         */
         protected function makeStyles($styles = array())
         {
             $styles = array_merge($this->styles, $styles);
@@ -135,7 +180,12 @@
             return $output;
         }
 
-        public function modularScale($scale)
+        /**
+         * @param int $scale
+         *
+         * @return string
+         */
+        public function modularScale($scale = 0)
         {
             $size = $this->base_font_size;
             $i    = 0;
