@@ -1,4 +1,10 @@
 <?php
+    /**
+     * @author Sean Cooper <sarcoma@live.co.uk>
+     *
+     * @package Sarcoma\Email\Email
+     */
+
     namespace Sarcoma\Email;
 
     use Twig_Loader_Filesystem;
