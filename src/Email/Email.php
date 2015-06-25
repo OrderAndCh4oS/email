@@ -71,12 +71,12 @@
          * @param string $text_area
          * @param string $tag
          * @param array $styles
-         * @param null $text_wrap
+         * @param mixed $text_wrap
          */
-        public function setTextArea($text_area, $tag, $styles = array(), $text_wrap = null)
+        public function setTextArea($text_area, $tag, $styles = array(), $text_wrap = false)
         {
             if (!empty($text_area)) {
-                if ($text_area) {
+                if ($text_wrap) {
                     $text_area = wordwrap($text_area, $text_wrap);
                 }
                 $text_area       = nl2br($text_area);
@@ -110,13 +110,16 @@
 
         /**
          * @param string $template
+         * @param $twig
+         *
          * @return string
          */
-        public function getMessage($template = 'email.twig')
+        public function getMessage($template = 'email.twig', $twig = false)
         {
-            $loader = new Twig_Loader_Filesystem(__DIR__ . '/../../views');
-            $twig   = new Twig_Environment($loader);
-
+            if(!$twig) {
+                $loader = new Twig_Loader_Filesystem(__DIR__ . '/../../views');
+                $twig   = new Twig_Environment($loader);
+            }
             $message = '';
             foreach ($this->message as $output) {
                 $message .= $output;
