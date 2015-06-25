@@ -6,7 +6,7 @@
     "html email builder"
   ],
   "require": {
-    "twig/twig": "1.9.*"
+    "twig/twig": "1.18.*"
   },
   "suggest": {
     "phpmailer/phpmailer": "^5.2"
