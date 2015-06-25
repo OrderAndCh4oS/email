@@ -176,14 +176,17 @@
         }
 
         /**
-         * @param string $template
-         * @param string $directory
-         *
-*@return string
-         * @uses Twig_Loader_Filesystem()
+         * @param array $content
+         * @param null $template
+         * @param null $directory
+
+
+*
+*@uses Twig_Loader_Filesystem()
          * @uses Twig_Environment()
+         * @return string
          */
-        public function getTwigTemplate($template = null, $directory = null)
+        public function getTwigTemplate($content = array(), $template = null, $directory = null)
         {
             if ($template && $directory) {
                 $loader = new Twig_Loader_Filesystem($directory);
@@ -197,7 +200,7 @@
                 'email_title' => $this->email_title,
                 'body_color'  => $this->body_color,
                 'table_color' => $this->table_color,
-                'content'     => $this->getMessage()
+                'content' => $content
             ));
         }
 
@@ -236,7 +239,7 @@
          *
          * @return string
          */
-        protected function makeTag($text, $tag = 'p', $styles = array())
+        public function makeTag($text, $tag = 'p', $styles = array())
         {
             return "<{$tag} style=\"{$this->makeStyles($styles)}\">{$text}</{$tag}>";
         }
