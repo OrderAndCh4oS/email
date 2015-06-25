@@ -7,11 +7,11 @@
     class Email
     {
 
+        protected $body_color = "#f1f1f1";
+        protected $table_color = "#ffffff";
         protected $color;
-        protected $font_family;
         protected $base_font_size;
         protected $ratio;
-        protected $line_height;
         protected $styles;
 
         protected $email_title;
@@ -21,15 +21,16 @@
          * @param string $font_family
          * @param int $base_font_size
          * @param float $line_height
+         * @param string $color
          * @param float $ratio
          */
         public function __construct(
             $font_family = 'Helvetica,Arial,sans-serif',
             $base_font_size = 12,
             $line_height = 1.3,
+            $color = "#000000",
             $ratio = 1.618
         ) {
-            $this->font_family    = $font_family;
             $this->base_font_size = $base_font_size;
             $this->ratio          = $ratio;
             $this->line_height    = $line_height;
@@ -37,9 +38,60 @@
                 'font-family'    => $font_family,
                 'font-size'      => $base_font_size . "px",
                 'line-height'    => $line_height,
+                'color'          => $color,
+                'margin-bottom'  => ($line_height * $base_font_size) . "px",
                 'padding-bottom' => 0,
-                'margin-bottom'  => ($line_height * $base_font_size) . "px"
+                'margin-top'     => 0,
+                'padding-top'    => 0
             );
+        }
+
+        /**
+         * @param string $body_color
+         */
+        public function setBodyColor($body_color)
+        {
+            $this->body_color = $body_color;
+        }
+
+        /**
+         * @param$table_color
+         */
+        public function setTableColor($table_color)
+        {
+            $this->table_color = $table_color;
+        }
+
+        /**
+         * @param string  $color
+         */
+        public function setColor($color)
+        {
+            $this->styles['color'] = $color;
+        }
+
+        /**
+         * @param string  $font_family
+         */
+        public function setFontFamily($font_family)
+        {
+            $this->styles['font-family'] = $font_family;
+        }
+
+        /**
+         * @param string  $font_size
+         */
+        public function setFontSize($font_size)
+        {
+            $this->styles['font-size'] = $font_size;
+        }
+
+        /**
+         * @param string  $line_height
+         */
+        public function setLineHeight($line_height)
+        {
+            $this->styles['line-height'] = $line_height;
         }
 
         /**
@@ -116,7 +168,7 @@
          */
         public function getMessage($template = 'email.twig', $twig = false)
         {
-            if(!$twig) {
+            if (!$twig) {
                 $loader = new Twig_Loader_Filesystem(__DIR__ . '/../../views');
                 $twig   = new Twig_Environment($loader);
             }
@@ -125,12 +177,18 @@
                 $message .= $output;
             }
 
-            return $twig->render($template, array('content' => $message));
+            return $twig->render($template, array(
+                'title'       => 'Email Title',
+                'body_color'  => $this->body_color,
+                'table_color' => $this->table_color,
+                'content'     => $message
+            ));
             //return $message;
         }
 
         /**
          * @param array $array
+         *
          * @return array $errors
          */
         public function check_required_fields($array)
@@ -148,6 +206,7 @@
 
         /**
          * @param $data
+         *
          * @return string
          */
         protected function clean($data)
