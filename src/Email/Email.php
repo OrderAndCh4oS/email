@@ -1,7 +1,6 @@
 <?php
     /**
      * @author Sean Cooper <sarcoma@live.co.uk>
-     *
      * @package Sarcoma\Email\Email
      */
 
@@ -42,10 +41,10 @@
             $this->line_height    = $line_height;
             $this->styles         = array(
                 'font-family'    => $font_family,
-                'font-size'      => $base_font_size . "px",
+                'font-size'     => $base_font_size."px",
                 'line-height'    => $line_height,
                 'color'          => $color,
-                'margin-bottom'  => ($line_height * $base_font_size) . "px",
+                'margin-bottom' => ($line_height * $base_font_size)."px",
                 'padding-bottom' => 0,
                 'margin-top'     => 0,
                 'padding-top'    => 0
@@ -123,7 +122,7 @@
          * @param string $tag
          * @param array $styles
          */
-        public function setTag($text, $tag, $styles = array())
+        public function setTag($text, $tag = 'p', $styles = array())
         {
             if (!empty($text)) {
                 $text            = stripslashes($this->clean($text));
@@ -139,7 +138,7 @@
          * @param array $styles
          * @param mixed $text_wrap
          */
-        public function setTextArea($text_area, $tag, $styles = array(), $text_wrap = null)
+        public function setTextArea($text_area, $tag = 'p', $styles = array(), $text_wrap = null)
         {
             if (!empty($text_area)) {
                 if ($text_wrap) {
@@ -160,39 +159,46 @@
          * @param string $tag
          * @param array $styles
          */
-        public function setLink($link_text, $url, $tag, $styles = array())
+        public function setLink($link_text, $url, $tag = 'p', $styles = array())
         {
-            $this->message[] = $this->makeTag('<a href="' . $this->clean($url) . '">' . $this->clean($link_text) . '</a>',
-                $tag, $styles);
+            $this->message[] = $this->makeTag('<a href="'.$this->clean($url).'">'.$this->clean($link_text).'</a>', $tag,
+                $styles);
         }
 
-        /**
-         * @param string $template
-         * @param $twig
-         *
-         * @return string
-         * @uses Twig_Environment()
-         */
-        public function getMessage($twig = null, $template = null)
+        public function getMessage()
         {
-
             $message = '';
             foreach ($this->message as $output) {
                 $message .= $output;
             }
 
-            if ($twig) {
-                return $twig->render($template, array(
-                    'email_title' => $this->email_title,
-                    'body_color'  => $this->body_color,
-                    'table_color' => $this->table_color,
-                    'content'     => $message
-                ));
-            } else {
-                return $message;
-            }
+            return $message;
+        }
 
-            //return $message;
+        /**
+         * @param string $template
+         * @param string $directory
+         *
+*@return string
+         * @uses Twig_Loader_Filesystem()
+         * @uses Twig_Environment()
+         */
+        public function getTwigTemplate($template = null, $directory = null)
+        {
+            if ($template && $directory) {
+                $loader = new Twig_Loader_Filesystem($directory);
+            } else {
+                $loader   = new Twig_Loader_Filesystem(__DIR__."/../../views");
+                $template = 'email.twig';
+            }
+            $twig = new Twig_Environment($loader);
+
+            return $twig->render($template, array(
+                'email_title' => $this->email_title,
+                'body_color'  => $this->body_color,
+                'table_color' => $this->table_color,
+                'content'     => $this->getMessage()
+            ));
         }
 
         /**
@@ -206,7 +212,7 @@
             foreach ($array as $key => $field_name) {
                 // check that required fields are set
                 if (!isset($field_name) || (empty($field_name) && $field_name != '0')) {
-                    $errors[] = $key . " is empty.";
+                    $errors[] = $key." is empty.";
                 }
             }
 
@@ -245,7 +251,7 @@
             $styles = array_merge($this->styles, $styles);
             $output = '';
             foreach ($styles as $property => $value) {
-                $output .= $property . ':' . $value . ';';
+                $output .= $property.':'.$value.';';
             }
 
             return $output;
@@ -263,15 +269,15 @@
             if ($scale > 0) {
                 while ($i < $scale) {
                     $size = round($size * $this->ratio, 2);
-                    $i ++;
+                    $i++;
                 }
             } elseif ($scale < 0) {
                 while ($i > $scale) {
                     $size = round($size / $this->ratio, 2);
-                    $i --;
+                    $i--;
                 }
             }
 
-            return $size . "px";
+            return $size."px";
         }
     }
