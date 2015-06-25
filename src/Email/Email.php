@@ -139,7 +139,7 @@
          * @param array $styles
          * @param mixed $text_wrap
          */
-        public function setTextArea($text_area, $tag, $styles = array(), $text_wrap = false)
+        public function setTextArea($text_area, $tag, $styles = array(), $text_wrap = null)
         {
             if (!empty($text_area)) {
                 if ($text_wrap) {
@@ -171,24 +171,27 @@
          * @param $twig
          *
          * @return string
+         * @uses Twig_Environment()
          */
-        public function getMessage($template = 'email.twig', $twig = false)
+        public function getMessage($twig = null, $template = null)
         {
-            if (!$twig) {
-                $loader = new Twig_Loader_Filesystem(__DIR__ . '/../../views');
-                $twig   = new Twig_Environment($loader);
-            }
+
             $message = '';
             foreach ($this->message as $output) {
                 $message .= $output;
             }
 
-            return $twig->render($template, array(
-                'email_title' => $this->email_title,
-                'body_color'  => $this->body_color,
-                'table_color' => $this->table_color,
-                'content'     => $message
-            ));
+            if ($twig) {
+                return $twig->render($template, array(
+                    'email_title' => $this->email_title,
+                    'body_color'  => $this->body_color,
+                    'table_color' => $this->table_color,
+                    'content'     => $message
+                ));
+            } else {
+                return $message;
+            }
+
             //return $message;
         }
 
@@ -221,15 +224,15 @@
         }
 
         /**
-         * @param $title
+         * @param $text
          * @param string $tag
          * @param array $styles
          *
          * @return string
          */
-        protected function makeTag($title, $tag = 'p', $styles = array())
+        protected function makeTag($text, $tag = 'p', $styles = array())
         {
-            return "<{$tag} style=\"{$this->makeStyles($styles)}\">{$title}</{$tag}>";
+            return "<{$tag} style=\"{$this->makeStyles($styles)}\">{$text}</{$tag}>";
         }
 
         /**
