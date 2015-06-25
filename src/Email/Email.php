@@ -71,7 +71,7 @@
         }
 
         /**
-         * @param string  $color
+         * @param string $color
          */
         public function setColor($color)
         {
@@ -79,7 +79,7 @@
         }
 
         /**
-         * @param string  $font_family
+         * @param string $font_family
          */
         public function setFontFamily($font_family)
         {
@@ -87,7 +87,7 @@
         }
 
         /**
-         * @param string  $font_size
+         * @param string $font_size
          */
         public function setFontSize($font_size)
         {
@@ -95,7 +95,7 @@
         }
 
         /**
-         * @param string  $line_height
+         * @param string $line_height
          */
         public function setLineHeight($line_height)
         {
@@ -178,7 +178,7 @@
             }
 
             return $twig->render($template, array(
-                'email_title'       => $this->email_title,
+                'email_title' => $this->email_title,
                 'body_color'  => $this->body_color,
                 'table_color' => $this->table_color,
                 'content'     => $message
