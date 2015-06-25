@@ -1,6 +1,9 @@
 <?php
     namespace Sarcoma\Email;
 
+    use Twig_Loader_Filesystem;
+    use Twig_Environment;
+
     class Email
     {
 
@@ -14,7 +17,7 @@
         protected $email_title;
         protected $message;
 
-        protected function __construct(
+        public function __construct(
             $font_family = 'Helvetica,Arial,sans-serif',
             $base_font_size = 12,
             $line_height = 1.3,
@@ -24,10 +27,12 @@
             $this->base_font_size = $base_font_size;
             $this->ratio          = $ratio;
             $this->line_height    = $line_height;
-            $this->styles = array(
+            $this->styles         = array(
                 'font-family'    => $font_family,
+                'font-size'      => $base_font_size . "px",
                 'line-height'    => $line_height,
-                'padding-bottom' => 0
+                'padding-bottom' => 0,
+                'margin-bottom'  => ($line_height * $base_font_size) . "px"
             );
         }
 
@@ -44,7 +49,7 @@
                 $text            = stripslashes($this->clean($text));
                 $this->message[] = $this->makeTag($text, $tag, $styles);
             } else {
-                $this->message[] = $this->makeTag('Not Provided', $tag);
+                $this->message[] = $this->makeTag('Not Provided', $tag, $styles);
             }
         }
 
@@ -52,24 +57,21 @@
         {
             if (!empty($text_area)) {
                 if ($text_area) {
-                    $text_area   = wordwrap($text_area, $text_wrap);
+                    $text_area = wordwrap($text_area, $text_wrap);
                 }
                 $text_area       = nl2br($text_area);
                 $text_area       = stripslashes($this->clean($text_area));
                 $text_area       = preg_replace('#&lt;((?:br) /?)&gt;#', '<\1>', $text_area);
-                $this->message[] = $this->makeTag($text_area, $styles);
+                $this->message[] = $this->makeTag($text_area, $tag, $styles);
             } else {
                 $this->message[] = $this->makeTag('Not Provided', $tag, $styles);
             }
         }
 
-        public function setLink($array, $tag, $styles = array())
+        public function setLink($link_text, $url, $tag, $styles = array())
         {
-            foreach ($array as $link_text => $url) {
-                ;
-                $this->message[] = $this->makeTag('<a href="'.$this->clean($url).'">'.$this->clean($link_text).'</a>',
-                    $tag, $styles);
-            }
+            $this->message[] = $this->makeTag('<a href="' . $this->clean($url) . '">' . $this->clean($link_text) . '</a>',
+                $tag, $styles);
         }
 
         /**
@@ -80,14 +82,18 @@
             return $this->email_title;
         }
 
-        public function getMessage()
+        public function getMessage($template = 'email.twig')
         {
+            $loader = new Twig_Loader_Filesystem(__DIR__ . '/../../views');
+            $twig   = new Twig_Environment($loader);
+
             $message = '';
             foreach ($this->message as $output) {
                 $message .= $output;
             }
 
-            return $message;
+            return $twig->render($template, array('content' => $message));
+            //return $message;
         }
 
         /**
@@ -101,7 +107,7 @@
             foreach ($array as $key => $field_name) {
                 // check that required fields are set
                 if (!isset($field_name) || (empty($field_name) && $field_name != '0')) {
-                    $errors[] = $key." is empty.";
+                    $errors[] = $key . " is empty.";
                 }
             }
 
@@ -113,9 +119,9 @@
             return htmlentities(trim($data));
         }
 
-        protected function makeTag($title, $tag = 'h1', $styles = array())
+        protected function makeTag($title, $tag = 'p', $styles = array())
         {
-            return "<{$tag} style=\"{$this->makeStyles($styles)}\">{$title}:</{$tag}>";
+            return "<{$tag} style=\"{$this->makeStyles($styles)}\">{$title}</{$tag}>";
         }
 
         protected function makeStyles($styles = array())
@@ -123,7 +129,7 @@
             $styles = array_merge($this->styles, $styles);
             $output = '';
             foreach ($styles as $property => $value) {
-                $output .= $property.':'.$value.';';
+                $output .= $property . ':' . $value . ';';
             }
 
             return $output;
@@ -133,18 +139,18 @@
         {
             $size = $this->base_font_size;
             $i    = 0;
-            if ($size > 0) {
-                while ($i <= $scale) {
+            if ($scale > 0) {
+                while ($i < $scale) {
                     $size = $size * $this->ratio;
-                    $i++;
+                    $i ++;
                 }
-            } elseif ($size < 0) {
-                while ($i >= $scale) {
+            } elseif ($scale < 0) {
+                while ($i > $scale) {
                     $size = $size / $this->ratio;
-                    $i--;
+                    $i --;
                 }
             }
 
-            return $size."px";
+            return $size . "px";
         }
     }

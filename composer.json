@@ -1,22 +1,27 @@
 {
-    "name": "sarcoma/email",
-    "description": "A html email builder for contact forms",
-    "keywords": ["email", "html email builder"],
-    "suggest": {
-        "phpmailer/phpmailer": "^5.2"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Sean Cooper",
-            "email": "sean@threeandme.co.uk",
-            "role": "Developer"
-        }
-    ],
-  "require": {},
-  "autoload": {
-      "psr-4": {
-        "Sarcoma\\" : "src/"
-      }
+  "name": "sarcoma/email",
+  "description": "A html email builder for contact forms",
+  "keywords": [
+    "email",
+    "html email builder"
+  ],
+  "require": {
+    "twig/twig": "1.9.*"
+  },
+  "suggest": {
+    "phpmailer/phpmailer": "^5.2"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sean Cooper",
+      "email": "sean@threeandme.co.uk",
+      "role": "Developer"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Sarcoma\\": "src/"
+    }
+  }
 }
