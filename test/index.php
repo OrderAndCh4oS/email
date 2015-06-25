@@ -16,6 +16,7 @@ Vestibulum rhoncus, ex ullamcorper pharetra egestas, arcu odio placerat ipsum, u
 
     if (empty($errors)) {
         $h2_style = array('font-size' => $email->modularScale(1));
+        $email->setColor('#3b4b44');
         $email->setBodyColor('#e1e9ee');
         $email->setTableColor('#f1f9ff');
         $email->setTag('Email Title', 'h1', array('font-size' => $email->modularScale(2)));

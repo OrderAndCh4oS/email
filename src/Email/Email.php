@@ -14,7 +14,7 @@
         protected $ratio;
         protected $styles;
 
-        protected $email_title;
+        protected $email_title = "HTML Email";
         protected $message;
 
         /**
@@ -44,6 +44,14 @@
                 'margin-top'     => 0,
                 'padding-top'    => 0
             );
+        }
+
+        /**
+         * @param string $email_title
+         */
+        public function setEmailTitle($email_title)
+        {
+            $this->email_title = $email_title;
         }
 
         /**
@@ -153,14 +161,6 @@
         }
 
         /**
-         * @return string
-         */
-        public function getEmailTitle()
-        {
-            return $this->email_title;
-        }
-
-        /**
          * @param string $template
          * @param $twig
          *
@@ -178,7 +178,7 @@
             }
 
             return $twig->render($template, array(
-                'title'       => 'Email Title',
+                'email_title'       => $this->email_title,
                 'body_color'  => $this->body_color,
                 'table_color' => $this->table_color,
                 'content'     => $message
@@ -253,12 +253,12 @@
             $i    = 0;
             if ($scale > 0) {
                 while ($i < $scale) {
-                    $size = $size * $this->ratio;
+                    $size = round($size * $this->ratio, 2);
                     $i ++;
                 }
             } elseif ($scale < 0) {
                 while ($i > $scale) {
-                    $size = $size / $this->ratio;
+                    $size = round($size / $this->ratio, 2);
                     $i --;
                 }
             }
