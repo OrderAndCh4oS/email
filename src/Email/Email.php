@@ -41,10 +41,10 @@
             $this->line_height    = $line_height;
             $this->styles         = array(
                 'font-family'    => $font_family,
-                'font-size'     => $base_font_size."px",
+                'font-size'      => $base_font_size . "px",
                 'line-height'    => $line_height,
                 'color'          => $color,
-                'margin-bottom' => ($line_height * $base_font_size)."px",
+                'margin-bottom'  => ($line_height * $base_font_size) . "px",
                 'padding-bottom' => 0,
                 'margin-top'     => 0,
                 'padding-top'    => 0
@@ -161,8 +161,8 @@
          */
         public function setLink($link_text, $url, $tag = 'p', $styles = array())
         {
-            $this->message[] = $this->makeTag('<a href="'.$this->clean($url).'">'.$this->clean($link_text).'</a>', $tag,
-                $styles);
+            $this->message[] = $this->makeTag('<a href="' . $this->clean($url) . '" styles="' . $this->makeStyles($styles) . '">' . $this->clean($link_text) . '</a>',
+                $tag, $styles);
         }
 
         public function getMessage()
@@ -179,10 +179,8 @@
          * @param array $content
          * @param null $template
          * @param null $directory
-
-
-*
-*@uses Twig_Loader_Filesystem()
+         *
+         * @uses Twig_Loader_Filesystem()
          * @uses Twig_Environment()
          * @return string
          */
@@ -191,7 +189,7 @@
             if ($template && $directory) {
                 $loader = new Twig_Loader_Filesystem($directory);
             } else {
-                $loader   = new Twig_Loader_Filesystem(__DIR__."/../../views");
+                $loader   = new Twig_Loader_Filesystem(__DIR__ . "/../../views");
                 $template = 'email.twig';
             }
             $twig = new Twig_Environment($loader);
@@ -200,7 +198,7 @@
                 'email_title' => $this->email_title,
                 'body_color'  => $this->body_color,
                 'table_color' => $this->table_color,
-                'content' => $content
+                'content'     => $content
             ));
         }
 
@@ -215,7 +213,7 @@
             foreach ($array as $key => $field_name) {
                 // check that required fields are set
                 if (!isset($field_name) || (empty($field_name) && $field_name != '0')) {
-                    $errors[] = $key." is empty.";
+                    $errors[] = $key . " is empty.";
                 }
             }
 
@@ -254,7 +252,7 @@
             $styles = array_merge($this->styles, $styles);
             $output = '';
             foreach ($styles as $property => $value) {
-                $output .= $property.':'.$value.';';
+                $output .= $property . ':' . $value . ';';
             }
 
             return $output;
@@ -272,15 +270,15 @@
             if ($scale > 0) {
                 while ($i < $scale) {
                     $size = round($size * $this->ratio, 2);
-                    $i++;
+                    $i ++;
                 }
             } elseif ($scale < 0) {
                 while ($i > $scale) {
                     $size = round($size / $this->ratio, 2);
-                    $i--;
+                    $i --;
                 }
             }
 
-            return $size."px";
+            return $size . "px";
         }
     }
