@@ -30,10 +30,10 @@
          * @param float $ratio
          */
         public function __construct(
-            $font_family = 'Helvetica,Arial,sans-serif',
-            $base_font_size = 12,
-            $line_height = 1.3,
             $color = "#000000",
+            $base_font_size = 12,
+            $font_family = 'Helvetica,Arial,sans-serif',
+            $line_height = 1.3,
             $ratio = 1.618
         ) {
             $this->base_font_size = $base_font_size;
