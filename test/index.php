@@ -26,13 +26,14 @@
         $email->setTag('Message', 'h2', $h2_style);
         $email->setTextArea($body, 'p');
         $email->setLink('three&me','https://www.threeandme.co.uk', 'p');
-        echo $email->getTwigTemplate(array(
+        $message = array(
             'message' => $email->getMessage(),
             'footer'  => $email->makeTag('© three&me ltd', 'p', array(
                 'font-size'  => $email->modularScale(-1),
                 'margin-top' => '20px'
             ))
-        ));
+        );
+        echo $email->getTwigTemplate($message, 'email.twig', __DIR__.'/../views');
     } else {
         foreach ($errors as $error) {
             echo $error;
