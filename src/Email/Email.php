@@ -179,10 +179,8 @@
          * @param array $content
          * @param null $template
          * @param null $directory
-
-
-*
-*@uses Twig_Loader_Filesystem()
+         *
+         * @uses Twig_Loader_Filesystem()
          * @uses Twig_Environment()
          * @return string
          */
